@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="text-center mb-4">Моє Резюме</h1>
+
+<section class="mb-4">
+    <h2>Про себе</h2>
+    <p>Я — веброзробник-початківець, який вивчає Flask та Python. Маю велике бажання розвиватися у напрямку backend-розробки та створювати якісні вебзастосунки.</p>
+</section>
+
+<section class="mb-4">
+    <h2>Освіта</h2>
+    <ul>
+        <li>2022–2025 — Коледж інформаційних технологій, спеціальність “Комп’ютерні науки”.</li>
+    </ul>
+</section>
+
+<section class="mb-4">
+    <h2>Навички</h2>
+    <ul>
+        <li>HTML, CSS, Bootstrap</li>
+        <li>Python, Flask</li>
+        <li>Git, GitHub</li>
+        <li>SQL, бази даних</li>
+    </ul>
+</section>
+
+<section class="mb-4">
+    <h2>Технології</h2>
+    <p>Працюю з VS Code, Jinja2, Flask, Bootstrap. Застосовую Git для контролю версій.</p>
+</section>
+
+<section class="mb-4">
+    <h2>Проєкти</h2>
+    <p>Мій навчальний проєкт — створення персонального вебсайту на Flask, який містить сторінки "Резюме" та "Контакти".</p>
+</section>
+
+<section class="text-center mt-5">
+    <img src="{{ url_for('static', filename='images/myphoto.jpg') }}" alt="Фото" class="img-thumbnail rounded-circle shadow" width="200">
+</section>
+{% endblock %}
