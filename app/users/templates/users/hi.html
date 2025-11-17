@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Привітання{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-3">
+        <nav class="p-3 shadow-sm bg-light rounded">
+            <h5 class="mb-3">Навігація користувача</h5>
+            <ul class="list-unstyled">
+                <li class="mb-2">
+                    <a href="{{ url_for('users.greetings', name='John', age=30) }}" class="btn btn-sm btn-outline-primary w-100">Привітати John</a>
+                </li>
+                <li class="mb-2">
+                    <a href="{{ url_for('users.admin') }}" class="btn btn-sm btn-outline-secondary w-100">Перейти до Admin</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="col-md-9">
+        <section>
+            <h2>Привіт, {{ name | upper }}!</h2>
+            {% if age is not none %}
+                <p>Вам **{{ age }}** років.</p>
+            {% else %}
+                <p>Вік не вказано.</p>
+            {% endif %}
+        </section>
+    </div>
+</div>
+
+{% endblock %}

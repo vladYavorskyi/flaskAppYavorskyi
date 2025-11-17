@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<h1>{{ product.name }}</h1>
+<p>{{ product.description }}</p>
+<a href="{{ url_for('products.product_list') }}">Назад до списку продуктів</a>
+{% endblock %}
