@@ -7,12 +7,39 @@
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
+
+                <!-- Resume -->
                 <li class="nav-item">
-                    <a class="nav-link {% if title == 'Резюме' %}active{% endif %}" href="{{ url_for('resume') }}">Резюме</a>
+                    <a class="nav-link {% if title == 'Резюме' %}active{% endif %}"
+                       href="{{ url_for('resume') }}">Резюме</a>
                 </li>
+
+                <!-- Contacts -->
                 <li class="nav-item">
-                    <a class="nav-link {% if title == 'Контакти' %}active{% endif %}" href="{{ url_for('contacts') }}">Контакти</a>
+                    <a class="nav-link {% if title == 'Контакти' %}active{% endif %}"
+                       href="{{ url_for('contacts') }}">Контакти</a>
                 </li>
+
+                {% if session.get('username') %}
+                    <!-- Profile -->
+                    <li class="nav-item">
+                        <a class="nav-link {% if title == 'Профіль' %}active{% endif %}"
+                           href="{{ url_for('users.profile') }}">Профіль</a>
+                    </li>
+
+                    <!-- Logout -->
+                    <li class="nav-item">
+                        <a class="nav-link text-warning"
+                           href="{{ url_for('users.logout') }}">Вийти</a>
+                    </li>
+
+                {% else %}
+                    <!-- Login -->
+                    <li class="nav-item">
+                        <a class="nav-link {% if title == 'Логін' %}active{% endif %}"
+                           href="{{ url_for('users.login') }}">Вхід</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>
