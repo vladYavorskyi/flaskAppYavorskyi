@@ -1,11 +1,10 @@
-# app/products/views.py
+
 
 from flask import render_template
 from . import products_bp
 
 
-# Маршрут для відображення списку всіх продуктів
-@products_bp.route('/')  # Буде доступно як /products/
+@products_bp.route('/')
 def product_list():
     products = [
         {'id': 1, 'name': 'Ноутбук', 'price': 1200},
@@ -17,17 +16,14 @@ def product_list():
                            products=products)
 
 
-# Маршрут для відображення конкретного продукту
-@products_bp.route('/<int:product_id>')  # Буде доступно як /products/1
+@products_bp.route('/<int:product_id>')
 def product_detail(product_id):
-    # Тут має бути логіка отримання продукту з бази даних
-    # Для прикладу:
+
     if product_id == 1:
         product = {'id': 1, 'name': 'Ноутбук X1', 'description': 'Потужний ігровий ноутбук.'}
     elif product_id == 2:
         product = {'id': 2, 'name': 'Смартфон Pro', 'description': 'Флагманський смартфон з 5G.'}
     else:
-        # Можна використати abort(404)
         product = {'name': 'Продукт не знайдено', 'description': 'Неіснуючий ID.'}
 
     return render_template('products/detail.html',

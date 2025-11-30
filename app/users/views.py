@@ -4,11 +4,8 @@ from flask import (
 )
 from markupsafe import escape
 from . import users_bp
+from app.forms import LoginForm
 
-
-# ---------------------------
-# Лабораторна 3 (залишаємо)
-# ---------------------------
 @users_bp.route("/hi/<string:name>")
 def greetings(name):
     age = request.args.get("age", None, type=int)
@@ -25,31 +22,29 @@ def admin():
     to_url = url_for("users.greetings", name="administrator", age=45)
     return redirect(to_url)
 
-
-
-# ---------------------------
-#       ЛАБОРАТОРНА 4
-# ---------------------------
-
 @users_bp.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+        remember = form.remember.data
 
         correct_user = "admin"
         correct_pass = "1234"
 
         if username != correct_user or password != correct_pass:
-            flash("Wrong data! Try again!", "danger")
+            flash("Invalid login or password!", "danger")
             return redirect(url_for("users.login"))
 
         session["username"] = username
-        flash(f"Welcome, {username}!", "success")
+        session["remember"] = remember
+
+        flash(f"Welcome, {username}! Remember: {remember}", "success")
         return redirect(url_for("users.profile"))
 
-    return render_template("users/login.html", title="Login")
-
+    return render_template("users/login.html", title="Login", form=form)
 
 @users_bp.route("/profile")
 def profile():
