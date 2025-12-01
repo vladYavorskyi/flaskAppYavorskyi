@@ -1,4 +1,6 @@
 DEBUG = True
 SECRET_KEY = "0ayLhOaYbbC46BepCTtxpQAZjkyUEqE0p6u3-TlPW-g"
+SQLALCHEMY_DATABASE_URI = "sqlite:///database.sqlite"
+SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 

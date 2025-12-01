@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% from "_form_macros.html" import render_field %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('posts.static', filename='css/posts.css') }}">
+{% endblock %}
+
+{% block title %}Редагувати пост{% endblock %}
+
+{% block content %}
+<h1 class="text-center mb-4">Редагувати пост</h1>
+
+<form method="POST" novalidate>
+    {{ form.hidden_tag() }}
+
+    {{ render_field(form.title) }}
+    {{ render_field(form.content) }}
+
+    {{ form.submit(class="btn btn-warning w-100") }}
+</form>
+
+<a href="{{ url_for('posts.post_detail', post_id=post.id) }}"
+   class="btn btn-secondary mt-3 w-100">
+    Назад
+</a>
+{% endblock %}

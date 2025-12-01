@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('posts.static', filename='css/posts.css') }}">
+{% endblock %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<h1 class="mb-3">{{ post.title }}</h1>
+
+<p class="lead">{{ post.content }}</p>
+
+<hr>
+
+<p class="text-muted">
+    Створено: {{ post.created_at.strftime('%Y-%m-%d %H:%M') }}
+</p>
+
+<div class="d-flex gap-3">
+    <a href="{{ url_for('posts.update_post', post_id=post.id) }}" class="btn btn-warning">
+        Редагувати
+    </a>
+
+    <form action="{{ url_for('posts.delete_post', post_id=post.id) }}" method="POST">
+        <button type="submit" class="btn btn-danger">Видалити</button>
+    </form>
+
+    <a href="{{ url_for('posts.post_list') }}" class="btn btn-secondary">
+        ← Назад
+    </a>
+</div>
+{% endblock %}

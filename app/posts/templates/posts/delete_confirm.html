@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('posts.static', filename='css/posts.css') }}">
+{% endblock %}
+
+{% block title %}Видалити пост{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-danger">Видалити пост?</h2>
+    <p class="lead">
+        Ви справді хочете видалити пост <strong>"{{ post.title }}"</strong>?
+    </p>
+
+    <form method="POST">
+        <button class="btn btn-danger" type="submit">Так, видалити</button>
+        <a href="{{ url_for('posts.post_detail', post_id=post.id) }}" class="btn btn-secondary">
+            Скасувати
+        </a>
+    </form>
+</div>
+{% endblock %}
