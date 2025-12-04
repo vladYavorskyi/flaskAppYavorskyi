@@ -45,4 +45,4 @@ def test_post_detail_page(test_client):
 
     assert response.status_code == 200
     assert "Test Post" in html
-    assert "This is a test post." in html
+    assert "git checkout -b lab7_flaskAppYavorskyi" in html

@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, flash
 from app.forms import ContactForm
+from flask_migrate import Migrate
 from app.database import db
 
 
@@ -8,6 +9,7 @@ def create_app():
     app.config.from_pyfile("../config.py")
 
     db.init_app(app)
+    migrate = Migrate(app, db)
 
     from .users import users_bp
     from .products import products_bp
