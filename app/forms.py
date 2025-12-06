@@ -9,17 +9,17 @@ from wtforms.validators import DataRequired, Length, Email, Regexp
 
 class LoginForm(FlaskForm):
     username = StringField(
-        "User name",
-        validators=[DataRequired(), Length(min=3, max=25)]
+        "Username",
+        validators=[DataRequired(), Length(min=3, max=30)]
     )
     password = PasswordField(
         "Password",
-        validators=[DataRequired(), Length(min=3, max=25)]
+        validators=[DataRequired(), Length(min=6)]
     )
 
     remember = BooleanField("Remember me")
-
     submit = SubmitField("Sign in")
+
 
 
 class ContactForm(FlaskForm):

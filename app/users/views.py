@@ -1,10 +1,15 @@
 from flask import (
     request, redirect, url_for, render_template,
-    session, flash, make_response
+    flash, make_response
 )
 from markupsafe import escape
 from . import users_bp
 from app.forms import LoginForm
+from app.users.forms import RegistrationForm
+from app.database import db
+from app.users.models import User
+from flask_login import login_user, logout_user, login_required, current_user
+
 
 @users_bp.route("/hi/<string:name>")
 def greetings(name):
@@ -22,66 +27,74 @@ def admin():
     to_url = url_for("users.greetings", name="administrator", age=45)
     return redirect(to_url)
 
+
+@users_bp.route("/register", methods=["GET", "POST"])
+def register():
+    form = RegistrationForm()
+
+    if form.validate_on_submit():
+        user = User(
+            username=form.username.data,
+            email=form.email.data
+        )
+        user.set_password(form.password.data)
+
+        db.session.add(user)
+        db.session.commit()
+
+        flash("Account created successfully!", "success")
+        return redirect(url_for("users.login"))
+
+    return render_template("users/register.html", form=form)
+
+
 @users_bp.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
 
     if form.validate_on_submit():
-        username = form.username.data
-        password = form.password.data
-        remember = form.remember.data
+        user = User.query.filter_by(username=form.username.data).first()
 
-        correct_user = "admin"
-        correct_pass = "1234"
-
-        if username != correct_user or password != correct_pass:
+        if not user or not user.check_password(form.password.data):
             flash("Invalid login or password!", "danger")
             return redirect(url_for("users.login"))
 
-        session["username"] = username
-        session["remember"] = remember
-
-        flash(f"Welcome, {username}! Remember: {remember}", "success")
+        login_user(user)
+        flash(f"Welcome, {user.username}!", "success")
         return redirect(url_for("users.profile"))
 
     return render_template("users/login.html", title="Login", form=form)
 
+
 @users_bp.route("/profile")
+@login_required
 def profile():
-    username = session.get("username")
-    if not username:
-        flash("Спочатку увійдіть!", "warning")
-        return redirect(url_for("users.login"))
-
     cookies = request.cookies.items()
-
-    return render_template(
-        "users/profile.html",
-        title="Профіль",
-        username=username,
-        cookies=cookies
-    )
+    return render_template("users/profile.html", user=current_user, cookies=cookies)
 
 
 @users_bp.route("/logout")
+@login_required
 def logout():
-    session.pop("username", None)
+    logout_user()
     flash("Logged out!", "info")
     return redirect(url_for("users.login"))
 
 
 @users_bp.route("/add_cookie", methods=["POST"])
+@login_required
 def add_cookie():
     key = request.form.get("key")
     value = request.form.get("value")
 
     resp = make_response(redirect(url_for("users.profile")))
-    resp.set_cookie(key, value, max_age=60*60*24)
+    resp.set_cookie(key, value, max_age=60 * 60 * 24)
     flash(f"Cookie '{key}' added!", "success")
     return resp
 
 
 @users_bp.route("/delete_cookie/<key>")
+@login_required
 def delete_cookie(key):
     resp = make_response(redirect(url_for("users.profile")))
     resp.delete_cookie(key)
@@ -90,6 +103,7 @@ def delete_cookie(key):
 
 
 @users_bp.route("/delete_all_cookies")
+@login_required
 def delete_all_cookies():
     resp = make_response(redirect(url_for("users.profile")))
     for key in request.cookies:
@@ -99,12 +113,13 @@ def delete_all_cookies():
 
 
 @users_bp.route("/set_theme/<mode>")
+@login_required
 def set_theme(mode):
     if mode not in ("light", "dark"):
         flash("Invalid theme!", "danger")
         return redirect(url_for("users.profile"))
 
     resp = make_response(redirect(url_for("users.profile")))
-    resp.set_cookie("theme", mode, max_age=60*60*24*365)
+    resp.set_cookie("theme", mode, max_age=60 * 60 * 24 * 365)
     flash(f"Theme set: {mode}", "success")
     return resp

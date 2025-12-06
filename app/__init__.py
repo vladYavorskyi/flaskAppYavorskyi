@@ -1,7 +1,10 @@
 from flask import Flask, render_template, redirect, url_for, flash
-from app.forms import ContactForm
 from flask_migrate import Migrate
-from app.database import db
+from flask_login import LoginManager
+
+from app.forms import ContactForm
+from app.database import db, bcrypt
+from app.users.models import User
 
 
 def create_app():
@@ -9,15 +12,23 @@ def create_app():
     app.config.from_pyfile("../config.py")
 
     db.init_app(app)
+    bcrypt.init_app(app)
     migrate = Migrate(app, db)
+
+    login_manager = LoginManager()
+    login_manager.login_view = "users.login"
+    login_manager.init_app(app)
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
 
     from .users import users_bp
     from .products import products_bp
+    from .posts import posts_bp
 
     app.register_blueprint(users_bp)
     app.register_blueprint(products_bp)
-
-    from .posts import posts_bp
     app.register_blueprint(posts_bp)
 
     @app.route("/")
@@ -31,14 +42,10 @@ def create_app():
     @app.route("/contacts", methods=["GET", "POST"])
     def contacts():
         form = ContactForm()
-
         if form.validate_on_submit():
             flash("Your message has been sent!", "success")
             return redirect(url_for("contacts"))
-
         return render_template("contacts.html", title="Контакти", form=form)
 
-    # ІМПОРТ МОДЕЛЕЙ ПЕРЕД ПОВЕРНЕННЯМ APP
     from app.database import models
-
     return app
