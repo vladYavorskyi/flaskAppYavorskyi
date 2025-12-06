@@ -5,6 +5,9 @@ from flask_login import LoginManager
 from app.forms import ContactForm
 from app.database import db, bcrypt
 from app.users.models import User
+from flask_login import current_user
+from datetime import datetime
+
 
 
 def create_app():
@@ -22,6 +25,12 @@ def create_app():
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
+
+    @app.before_request
+    def update_last_seen():
+        if current_user.is_authenticated:
+            current_user.last_seen = datetime.utcnow()
+            db.session.commit()
 
     from .users import users_bp
     from .products import products_bp
@@ -46,6 +55,7 @@ def create_app():
             flash("Your message has been sent!", "success")
             return redirect(url_for("contacts"))
         return render_template("contacts.html", title="Контакти", form=form)
+
 
     from app.database import models
     return app

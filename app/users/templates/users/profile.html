@@ -4,12 +4,34 @@
 
 {% block content %}
 
-<h2 class="mb-4">Привіт, {{ current_user.username }}</h2>
+<h2 class="mb-4 text-center">Привіт, {{ current_user.username }}</h2>
 
-<div class="card shadow p-3 mb-4" style="max-width: 500px;">
+<div class="text-center mb-3">
+    <img src="{{ url_for('static', filename='images/' ~ current_user.image) }}"
+         class="rounded-circle shadow"
+         alt="Profile photo"
+         width="150">
+</div>
+
+<div class="card shadow p-3 mb-4 mx-auto" style="max-width: 600px;">
     <p><strong>Email:</strong> {{ current_user.email }}</p>
     <p><strong>Дата створення акаунта:</strong> {{ current_user.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+
+    <p><strong>Остання активність:</strong>
+        {{ current_user.last_seen.strftime('%Y-%m-%d %H:%M') }}
+    </p>
+
+    {% if current_user.about_me %}
+        <p><strong>Про мене:</strong> {{ current_user.about_me }}</p>
+    {% else %}
+        <p class="text-muted"><em>Про мене ще не заповнено.</em></p>
+    {% endif %}
+
+    <a href="{{ url_for('users.edit_profile') }}" class="btn btn-secondary w-100 mt-2">
+        Редагувати профіль
+    </a>
 </div>
+
 
 <div class="row">
     <div class="col-md-6">
@@ -61,9 +83,8 @@
                                 <td style="max-width: 120px; word-break: break-all;">{{ key }}</td>
                                 <td style="max-width: 220px; word-break: break-all;">{{ value }}</td>
                                 <td>
-                                    <a href="{{ url_for('users.delete_cookie', key=key) }}" class="btn btn-sm btn-danger">
-                                        Видалити
-                                    </a>
+                                    <a href="{{ url_for('users.delete_cookie', key=key) }}"
+                                       class="btn btn-sm btn-danger">Видалити</a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -71,9 +92,8 @@
                     </table>
                 </div>
 
-                <a href="{{ url_for('users.delete_all_cookies') }}" class="btn btn-warning w-100 mt-2">
-                    Видалити всі cookies
-                </a>
+                <a href="{{ url_for('users.delete_all_cookies') }}"
+                   class="btn btn-warning w-100 mt-2">Видалити всі cookies</a>
             {% else %}
                 <p>Немає збережених cookies.</p>
             {% endif %}

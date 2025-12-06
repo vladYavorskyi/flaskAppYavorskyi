@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 650px;">
+    <div class="card shadow-lg border-0">
+        <div class="card-body p-4">
+
+            <h2 class="mb-4 text-center fw-bold">Редагування профілю</h2>
+
+            <form method="POST" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+
+                <!-- Username -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ form.username.label }}</label>
+                    {{ form.username(class="form-control form-control-lg") }}
+                </div>
+
+                <!-- About me -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ form.about_me.label }}</label>
+                    {{ form.about_me(class="form-control form-control-lg", rows="4") }}
+                </div>
+
+                <!-- Upload image -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ form.image.label }}</label>
+                    {{ form.image(class="form-control") }}
+                </div>
+
+                <!-- Current image -->
+                <div class="text-center mb-3">
+                    <img src="{{ url_for('static', filename='images/' ~ current_user.image) }}"
+                         class="rounded-circle shadow"
+                         style="width:120px; height:120px; object-fit:cover;">
+                </div>
+
+                {{ form.submit(class="btn btn-primary btn-lg w-100") }}
+            </form>
+
+            <div class="text-center mt-3">
+                <a href="{{ url_for('users.profile') }}">← Назад до профілю</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

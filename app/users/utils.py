@@ -1,12 +1,21 @@
-from functools import wraps
-from flask import session, redirect, url_for, flash
+import os
+import secrets
+from PIL import Image
+from flask import current_app
 
+def save_profile_image(form_image):
+    random_hex = secrets.token_hex(8)
+    _, file_ext = os.path.splitext(form_image.filename)
+    image_filename = random_hex + file_ext
 
-def login_required(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        if "username" not in session:
-            flash("Спочатку увійдіть!", "warning")
-            return redirect(url_for("users.login"))
-        return f(*args, **kwargs)
-    return decorated
+    path = os.path.join(
+        current_app.root_path,
+        'static/images',
+        image_filename
+    )
+
+    img = Image.open(form_image)
+    img.thumbnail((300, 300))
+    img.save(path)
+
+    return image_filename
