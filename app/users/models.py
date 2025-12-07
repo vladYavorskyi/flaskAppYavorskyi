@@ -2,6 +2,7 @@ from app.database import db
 from flask_login import UserMixin
 from datetime import datetime
 
+
 class User(db.Model, UserMixin):
     __tablename__ = "users"
 
@@ -11,16 +12,21 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
-
     image = db.Column(db.String(255), default="myphoto.jpg")
     about_me = db.Column(db.String(500))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
 
     posts = db.relationship("Post", back_populates="user")
 
+    # Correct rooms relationship
+    rooms = db.relationship(
+        "Room",
+        back_populates="owner",
+        cascade="all, delete-orphan"
+    )
+
     def __repr__(self):
         return f"<User {self.username}>"
-
 
     def set_password(self, password):
         from app.database import bcrypt

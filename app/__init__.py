@@ -35,10 +35,12 @@ def create_app():
     from .users import users_bp
     from .products import products_bp
     from .posts import posts_bp
+    from .rooms import rooms_bp
 
     app.register_blueprint(users_bp)
     app.register_blueprint(products_bp)
     app.register_blueprint(posts_bp)
+    app.register_blueprint(rooms_bp, url_prefix="/rooms")
 
     @app.route("/")
     def resume():

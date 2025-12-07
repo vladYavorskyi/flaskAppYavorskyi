@@ -67,20 +67,12 @@ def login():
     return render_template("users/login.html", title="Login", form=form)
 
 
-# -----------------------
-#      PROFILE PAGE
-# -----------------------
-
 @users_bp.route("/profile")
 @login_required
 def profile():
     cookies = request.cookies.items()
     return render_template("users/profile.html", cookies=cookies)
 
-
-# -----------------------
-#   EDIT PROFILE (LAB 10)
-# -----------------------
 
 @users_bp.route("/edit_profile", methods=["GET", "POST"])
 @login_required
@@ -89,7 +81,7 @@ def edit_profile():
 
     if form.validate_on_submit():
 
-        # Upload avatar if included
+
         if form.image.data:
             image_file = save_profile_image(form.image.data)
             current_user.image = image_file
@@ -102,16 +94,11 @@ def edit_profile():
         flash("Profile updated successfully!", "success")
         return redirect(url_for("users.profile"))
 
-    # Initial form data
+
     form.username.data = current_user.username
     form.about_me.data = current_user.about_me
 
     return render_template("users/edit_profile.html", form=form)
-
-
-# -----------------------
-#      LOGOUT
-# -----------------------
 
 @users_bp.route("/logout")
 @login_required
@@ -119,11 +106,6 @@ def logout():
     logout_user()
     flash("Logged out!", "info")
     return redirect(url_for("users.login"))
-
-
-# -----------------------
-# COOKIES MANAGEMENT
-# -----------------------
 
 @users_bp.route("/add_cookie", methods=["POST"])
 @login_required
@@ -155,10 +137,6 @@ def delete_all_cookies():
     flash("All cookies deleted!", "info")
     return resp
 
-
-# -----------------------
-#     SET THEME MODE
-# -----------------------
 
 @users_bp.route("/set_theme/<mode>")
 @login_required

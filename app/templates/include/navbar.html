@@ -23,6 +23,14 @@
 
                 {% if current_user.is_authenticated %}
 
+                    <!-- Номери -->
+                    <li class="nav-item">
+                        <a class="nav-link {% if title == 'Номери' %}active{% endif %}"
+                           href="{{ url_for('rooms.list_rooms') }}">
+                            Номери
+                        </a>
+                    </li>
+
                     <!-- Профіль -->
                     <li class="nav-item">
                         <a class="nav-link {% if title == 'Профіль' %}active{% endif %}"

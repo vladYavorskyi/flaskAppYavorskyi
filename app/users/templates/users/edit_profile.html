@@ -11,25 +11,21 @@
             <form method="POST" enctype="multipart/form-data">
                 {{ form.hidden_tag() }}
 
-                <!-- Username -->
                 <div class="mb-3">
                     <label class="form-label fw-semibold">{{ form.username.label }}</label>
                     {{ form.username(class="form-control form-control-lg") }}
                 </div>
 
-                <!-- About me -->
                 <div class="mb-3">
                     <label class="form-label fw-semibold">{{ form.about_me.label }}</label>
                     {{ form.about_me(class="form-control form-control-lg", rows="4") }}
                 </div>
 
-                <!-- Upload image -->
                 <div class="mb-3">
                     <label class="form-label fw-semibold">{{ form.image.label }}</label>
                     {{ form.image(class="form-control") }}
                 </div>
 
-                <!-- Current image -->
                 <div class="text-center mb-3">
                     <img src="{{ url_for('static', filename='images/' ~ current_user.image) }}"
                          class="rounded-circle shadow"
